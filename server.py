@@ -19,7 +19,7 @@ class DynamicThreadPoolServer:
     def start_server(self):
         server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server_socket.bind((self.host, self.port))
-        server_socket.listen(20000)  # Increased backlog to 100
+        server_socket.listen(20000) 
         print("Server listening on {}:{}".format(self.host, self.port))
 
         self.executor = ThreadPoolExecutor(max_workers=self.initial_threads)
@@ -41,7 +41,6 @@ class DynamicThreadPoolServer:
         if request.startswith("PUT"):
             body = request.split("\r\n\r\n")[1]
             data = json.loads(body)
-            #print(data.keys())
             key = data["key"]
             value = data["value"]
 
@@ -59,12 +58,10 @@ class DynamicThreadPoolServer:
         else:
             response_body = "Invalid request"
             status_line = "HTTP/1.1 400 Bad Request"
-        #self.print_dict_info()
         response_headers = "Content-Type: text/plain\r\n"
         response = "{}\r\n{}\r\n\r\n{}".format(status_line, response_headers, response_body)
 
         self.i+=1
-        # print(self.i)
         if self.i >= 10000:
             total_time = time.time() - self.start_time
             print(total_time)
@@ -75,15 +72,12 @@ class DynamicThreadPoolServer:
 
     def put(self, key, value):
         with self.lock:
-            # print("Putting", key)
             self.dictionary[key] = value
 
     def get(self, key):
         with self.lock:
-            # print("Getting", key)
             return self.dictionary.get(key, "NULL")
 
-# Usage
 if __name__ == "__main__":
     server = DynamicThreadPoolServer("127.0.0.1", 8081, initial_threads=5, max_threads=12, backlog_threshold=10)
     server.start_server()

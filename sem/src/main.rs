@@ -51,8 +51,6 @@ impl DynamicThreadPoolServer {
                         owned_res.push('}');
                         let json: serde_json::Value = serde_json::from_str(&owned_res)
                             .expect("JSON was not well-formatted");
-                        // println!("{}", json);
-                        // Extract key and value from JSON
 
                         if let (Some(key), Some(value)) = (json.get("key"), json.get("value")) {
                             let key = key.as_str().unwrap().to_string();
@@ -86,7 +84,6 @@ impl DynamicThreadPoolServer {
                 ("Invalid request".to_string(), "HTTP/1.1 400 Bad Request")
             };
 
-            // Self::print_dict_info_with_dictionary(&dictionary);
             let response_headers = "Content-Type: text/plain\r\n";
             let response = format!("{}\r\n{}\r\n\r\n{}", status_line, response_headers, response_body);
 
